@@ -21,6 +21,8 @@ string Card::getRank() const {
         case QUEEN: return "Queen";
         case KING: return "King";
         case ACE: return "Ace";
+        default: return "Unknown Rank"; // Debug
+
     }
     return "";
 }
@@ -32,6 +34,7 @@ string Card::getSuit() const {
         case DIAMONDS: return "Diamonds";
         case CLUBS: return "Clubs";
         case SPADES: return "Spades";
+        default: return "Unknown Suit"; // Debug
     }
     return "";
 }

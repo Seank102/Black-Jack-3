@@ -20,6 +20,11 @@ public:
 
     // Function to display all cards in the deck (for debugging)
     void displayDeck() const;
+
+    // Function that resets the deck after each round
+    void resetDeck();
+
+    int getDeckSize() const;
 };
 
 #endif

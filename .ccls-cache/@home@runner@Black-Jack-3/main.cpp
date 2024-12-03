@@ -55,6 +55,22 @@ bool playerTurn(Deck& deck, vector<Card>& playerHand) {
     }
 }
 
+// Helper function for splitting
+void splitHands(Deck& deck, vector<Card>& hand) {
+    vector<Card> splitHand1 = {hand[0], deck.dealCard()};
+    vector<Card> splitHand2 = {hand[1], deck.dealCard()};
+
+    cout << "\nPlaying first split hand:" << endl;
+    if (playerTurn(deck, splitHand1)) {
+        cout << "Final total for first hand: " << calculateHandValue(splitHand1) << endl;
+    }
+
+    cout << "\nPlaying second split hand:" << endl;
+    if (playerTurn(deck, splitHand2)) {
+        cout << "Final total for second hand: " << calculateHandValue(splitHand2) << endl;
+    }
+}
+
 // Helper function for dealer's turn
 bool dealerTurn(Deck& deck, vector<Card>& dealerHand) {
     cout << "\nDealer's hand:" << endl;
@@ -93,12 +109,13 @@ int main() {
     Deck deck;                // Create and shuffle the deck
     deck.shuffleDeck();
 
-    vector<Card> playerHand;  // Player's hand
-    vector<Card> dealerHand;  // Dealer's hand
 
     char playAgain = 'Y';
-
     while (playAgain == 'Y' || playAgain == 'y') {
+
+        vector<Card> playerHand = {deck.dealCard(), deck.dealCard()};
+        vector<Card> dealerHand = {deck.dealCard(), deck.dealCard()};
+        
         // Initial deal
         playerHand.clear();
         dealerHand.clear();

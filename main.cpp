@@ -30,6 +30,65 @@ int calculateHandValue(const vector<Card>& hand) {
     return total;
 }
 
+// Helper function for player's turn
+bool playerTurn(Deck& deck, vector<Card>& playerHand) {
+    while (true) {
+        cout << "\nPlayer's hand:" << endl;
+        for (const auto& card : playerHand) card.displayCard();
+        int total = calculateHandValue(playerHand);
+        cout << "Total: " << total << endl;
+
+        if (total > 21) {
+            cout << "You bust! Dealer wins.\n";
+            return false; // Player loses
+        }
+
+        cout << "\nDo you want to (H)it or (S)tand? ";
+        char choice;
+        cin >> choice;
+
+        if (choice == 'H' || choice == 'h') {
+            playerHand.push_back(deck.dealCard());
+        } else if (choice == 'S' || choice == 's') {
+            return true; // Player stands
+        }
+    }
+}
+
+// Helper function for dealer's turn
+bool dealerTurn(Deck& deck, vector<Card>& dealerHand) {
+    cout << "\nDealer's hand:" << endl;
+    for (const auto& card : dealerHand) card.displayCard();
+
+    while (calculateHandValue(dealerHand) < 17) {
+        cout << "\nDealer hits." << endl;
+        dealerHand.push_back(deck.dealCard());
+    }
+
+    int total = calculateHandValue(dealerHand);
+    if (total > 21) {
+        cout << "\nDealer busts! Player wins.\n";
+        return false; // Dealer loses
+    }
+
+    cout << "\nDealer stands with a total of " << total << ".\n";
+    return true; // Dealer stands
+}
+
+// Helper function to evaluate the winner
+void evaluateWinner(const vector<Card>& playerHand, const vector<Card>& dealerHand) {
+    int playerTotal = calculateHandValue(playerHand);
+    int dealerTotal = calculateHandValue(dealerHand);
+
+    if (playerTotal > dealerTotal) {
+        cout << "\nPlayer wins!\n";
+    } else if (playerTotal < dealerTotal) {
+        cout << "\nDealer wins.\n";
+    } else {
+        cout << "\nIt's a tie.\n";
+    }
+}
+
 int main() {
     Deck deck;                // Create and shuffle the deck
     deck.shuffleDeck();

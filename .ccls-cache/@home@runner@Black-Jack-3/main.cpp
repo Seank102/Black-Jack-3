@@ -30,55 +30,6 @@ int calculateHandValue(const vector<Card>& hand) {
     return total;
 }
 
-// Helper function for player's turn with doubling down
-bool playerTurn(Deck& deck, vector<Card>& playerHand, bool& playerDoubledDown) {
-    while (true) {
-        cout << "\nPlayer's hand:" << endl;
-        for (const auto& card : playerHand) card.displayCard();
-        int total = calculateHandValue(playerHand);
-        cout << "Total: " << total << endl;
-
-        if (total > 21) {
-            cout << "You bust! Dealer wins.\n";
-            return false; // Player loses
-        }
-
-        // Check for doubling down on the first turn
-        if (playerHand.size() == 2 && !playerDoubledDown) {
-            cout << "\nDo you want to double down? (Y/N): ";
-            char doubleChoice;
-            cin >> doubleChoice;
-
-            if (doubleChoice == 'Y' || doubleChoice == 'y') {
-                playerHand.push_back(deck.dealCard());
-                cout << "\nYou drew:" << endl;
-                playerHand.back().displayCard();
-                total = calculateHandValue(playerHand);
-                cout << "Total: " << total << endl;
-
-                if (total > 21) {
-                    cout << "You bust! Dealer wins.\n";
-                } else {
-                    cout << "Your turn ends after doubling down.\n";
-                }
-
-                playerDoubledDown = true; // Mark as doubled down
-                return total <= 21; // Return whether the player is still in the game
-            }
-        }
-
-        cout << "\nDo you want to (H)it or (S)tand? ";
-        char choice;
-        cin >> choice;
-
-        if (choice == 'H' || choice == 'h') {
-            playerHand.push_back(deck.dealCard());
-        } else if (choice == 'S' || choice == 's') {
-            return true; // Player stands
-        }
-    }
-}
-
 // Helper function for splitting
 void splitHands(Deck& deck, vector<Card>& hand) {
     vector<Card> splitHand1 = {hand[0], deck.dealCard()};

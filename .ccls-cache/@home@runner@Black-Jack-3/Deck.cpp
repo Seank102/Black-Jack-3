@@ -6,11 +6,25 @@ using namespace std;
 
 // Initializes the deck with all 52 cards
 Deck::Deck() {
+    static_assert(CLUBS < DIAMONDS, "Suit enum values are not ordered properly."); // Safegaurd against accidental Suit enum changes
+    static_assert(TWO < ACE, "Rank enum values are not ordered properly."); // Safegaurd against accidental Rank enum changes
+
     for (int s = CLUBS; s <= DIAMONDS; ++s) {  // Loop through all suits
         for (int r = TWO; r <= ACE; ++r) {    // Loop through all ranks
             cards.push_back(Card(static_cast<Rank>(r), static_cast<Suit>(s)));
         }
     }
+}
+
+// Resets the deck to its original state
+void Deck::resetDeck() {
+    cards.clear();  // Clear the current deck
+    for (int s = CLUBS; s <= DIAMONDS; ++s) {  // Loop through all suits
+        for (int r = TWO; r <= ACE; ++r) {  // Loop through all ranks
+            cards.push_back(Card(static_cast<Rank>(r), static_cast<Suit>(s)));
+        }
+    }
+    shuffleDeck();  // Shuffle the deck after resetting
 }
 
 // Shuffles the deck using a random number generator
@@ -27,7 +41,7 @@ Card Deck::dealCard() {
         cards.pop_back();              // Remove the top card
         return dealtCard;              // Return the dealt card
     }
-    throw runtime_error("No cards left in the deck!"); // Error if deck is empty
+    throw runtime_error("No cards left in the deck!"); // Debug error if deck is empty
 }
 
 // Displays all cards in the deck (useful for debugging)
@@ -36,3 +50,7 @@ void Deck::displayDeck() const {
         card.displayCard();
     }
 }
+
+int Deck::getDeckSize() const {
+        return cards.size();
+    }

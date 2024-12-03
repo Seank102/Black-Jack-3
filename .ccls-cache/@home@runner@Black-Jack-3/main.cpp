@@ -211,9 +211,6 @@ int main() {
         // Player's turn
         if (playerInGame) { // Dealer's turn only runs if the player is still in the game
             if (!dealerTurn(deck, dealerHand)) {
-                cout << "\nDo you want to play another round? (Y/N): ";
-                cin >> playAgain;
-                continue;
             }
 
             // Evaluate the winner

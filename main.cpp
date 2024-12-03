@@ -1,4 +1,5 @@
 #include "Deck.h"
+#include "Player.h"
 #include <vector>
 #include <iostream>
 using namespace std;

@@ -30,8 +30,8 @@ int calculateHandValue(const vector<Card>& hand) {
     return total;
 }
 
-// Helper function for player's turn
-bool playerTurn(Deck& deck, vector<Card>& playerHand) {
+// Helper function for player's turn with doubling down
+bool playerTurn(Deck& deck, vector<Card>& playerHand, bool& playerDoubledDown) {
     while (true) {
         cout << "\nPlayer's hand:" << endl;
         for (const auto& card : playerHand) card.displayCard();
@@ -41,6 +41,30 @@ bool playerTurn(Deck& deck, vector<Card>& playerHand) {
         if (total > 21) {
             cout << "You bust! Dealer wins.\n";
             return false; // Player loses
+        }
+
+        // Check for doubling down on the first turn
+        if (playerHand.size() == 2 && !playerDoubledDown) {
+            cout << "\nDo you want to double down? (Y/N): ";
+            char doubleChoice;
+            cin >> doubleChoice;
+
+            if (doubleChoice == 'Y' || doubleChoice == 'y') {
+                playerHand.push_back(deck.dealCard());
+                cout << "\nYou drew:" << endl;
+                playerHand.back().displayCard();
+                total = calculateHandValue(playerHand);
+                cout << "Total: " << total << endl;
+
+                if (total > 21) {
+                    cout << "You bust! Dealer wins.\n";
+                } else {
+                    cout << "Your turn ends after doubling down.\n";
+                }
+
+                playerDoubledDown = true; // Mark as doubled down
+                return total <= 21; // Return whether the player is still in the game
+            }
         }
 
         cout << "\nDo you want to (H)it or (S)tand? ";
@@ -60,13 +84,16 @@ void splitHands(Deck& deck, vector<Card>& hand) {
     vector<Card> splitHand1 = {hand[0], deck.dealCard()};
     vector<Card> splitHand2 = {hand[1], deck.dealCard()};
 
+    // Dummy flag for doubling down (not applicable during splits)
+    bool dummyDoubledDown = false;
+
     cout << "\nPlaying first split hand:" << endl;
-    if (playerTurn(deck, splitHand1)) {
+    if (playerTurn(deck, splitHand1, dummyDoubledDown)) {
         cout << "Final total for first hand: " << calculateHandValue(splitHand1) << endl;
     }
 
     cout << "\nPlaying second split hand:" << endl;
-    if (playerTurn(deck, splitHand2)) {
+    if (playerTurn(deck, splitHand2, dummyDoubledDown)) {
         cout << "Final total for second hand: " << calculateHandValue(splitHand2) << endl;
     }
 }
@@ -106,7 +133,7 @@ void evaluateWinner(const vector<Card>& playerHand, const vector<Card>& dealerHa
 }
 
 int main() {
-    Deck deck;                // Create and shuffle the deck
+    Deck deck; // Create and shuffle the deck
     deck.shuffleDeck();
 
     char playAgain = 'Y';
@@ -143,6 +170,59 @@ int main() {
             continue;
         }
 
+        // Check for splitting
+        if (playerHand[0].getRank() == playerHand[1].getRank()) {
+            cout << "\nYou have a pair of " << playerHand[0].getRank() << "s. Do you want to split? (Y/N): ";
+            char splitChoice;
+            cin >> splitChoice;
+
+            if (splitChoice == 'Y' || splitChoice == 'y') {
+                splitHands(deck, playerHand);
+                cout << "\nDo you want to play another round? (Y/N): ";
+                cin >> playAgain;
+                continue;
+            }
+        }
+
+        // Check for doubling down
+        cout << "\nDo you want to double down? (Y/N): ";
+        char doubleChoice;
+        cin >> doubleChoice;
+
+        if (doubleChoice == 'Y' || doubleChoice == 'y') {
+            playerHand.push_back(deck.dealCard());
+            cout << "\nYou drew:" << endl;
+            playerHand.back().displayCard();
+            playerTotal = calculateHandValue(playerHand);
+            cout << "Total: " << playerTotal << endl;
+            
+            if (playerTotal > 21) {
+                cout << "You bust! Dealer wins.\n";
+                }
+            cout << "\nDo you want to play another round? (Y/N): ";
+            cin >> playAgain;
+            continue;
+        }
+
+        // Track doubling down
+        bool playerDoubledDown = false;
+        bool playerInGame = playerTurn(deck, playerHand, playerDoubledDown);
+        
+        // Player's turn
+        if (playerInGame) { // Dealer's turn only runs if the player is still in the game
+            if (!dealerTurn(deck, dealerHand)) {
+                cout << "\nDo you want to play another round? (Y/N): ";
+                cin >> playAgain;
+                continue;
+            }
+
+            // Evaluate the winner
+            evaluateWinner(playerHand, dealerHand);
+        }
+        // Replay option
+        cout << "\nDo you want to play another round? (Y/N): ";
+        cin >> playAgain;
+    }
 
     cout << "Thanks for playing!" << endl;
     return 0;

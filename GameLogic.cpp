@@ -1,4 +1,5 @@
 #include "GameLogic.h"
+#include "Player.h"
 #include <iostream>
 
 using namespace std;
@@ -9,15 +10,15 @@ void evaluateWinner(const vector<Card>& playerHand, const vector<Card>& dealerHa
     int dealerTotal = calculateHandValue(dealerHand);
 
     if (playerTotal > 21) {
-        cout << "You bust! Dealer wins.\n";
-    } else if (dealerTotal > 21) {
-        cout << "Dealer busts! Player wins.\n";
-    } else if (playerTotal > dealerTotal) {
-        cout << "Player wins!\n";
-    } else if (playerTotal < dealerTotal) {
-        cout << "Dealer wins.\n";
-    } else {
-        cout << "It's a tie!\n";
+        cout << "You bust! Dealer wins.\n";}
+    else if (dealerTotal > 21) {
+        cout << "Dealer busts! Player wins.\n";}
+    else if (playerTotal > dealerTotal) {
+        cout << "Player wins with " << playerTotal << "!\n";}
+    else if (playerTotal < dealerTotal) {
+        cout << "Dealer wins.\n";}
+    else {
+        cout << "It's a push!\n";
     }
 }
 
@@ -72,7 +73,7 @@ bool dealerTurn(Deck& deck, vector<Card>& dealerHand) {
     cout << "\nDealer stands with a total of " << total << ".\n";
 
     if (total > 21) {
-        cout << "\nDealer busts! Player wins.\n";
+        cout << "\nDealer busts. Player wins!\n";
         return false; // Dealer loses
     }
     else return true; // Dealer stands
@@ -97,8 +98,8 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
     int total1 = calculateHandValue(hand1);
     
     if (hand1InGame) {
-        cout << "Final total for first hand: " << total1 << endl;
-    } else {
+        cout << "Final total for first hand: " << total1 << endl;}
+    else {
         cout << "First hand busts with a total of " << total1 << endl;
     }
 
@@ -109,8 +110,8 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
     int total2 = calculateHandValue(hand2);
     
     if (hand2InGame) {
-        cout << "Final total for second hand: " << total2 << endl;
-    } else {
+        cout << "Final total for second hand: " << total2 << endl;}
+    else {
         cout << "Second hand busts with a total of " << total2 << endl;
     }
 
@@ -119,28 +120,24 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
     bool dealerStand = dealerTurn(deck, dealerHand);
     int dealerTotal = calculateHandValue(dealerHand);
     
-    cout << "Dealer Total: " << dealerTotal << "\n";
-    cout << "Dealer Stand: " << (dealerStand ? "true" : "false") << "\n";
-
-    
     if (!dealerStand) {
         cout << "Dealer busts! ";
         if (hand1InGame) cout << "First hand wins. ";
-        if (hand2InGame) cout << "Second hand wins.\n";
-    } else {
+        if (hand2InGame) cout << "Second hand wins.\n";}
+    else {
         if (hand1InGame && total1 > dealerTotal && total1 <= 21) {
-            cout << "First hand wins against the dealer.\n";
-        } else if (hand1InGame && total1 == dealerTotal) {
-            cout << "First hand ties with the dealer.\n";
-        } else if (total1 > 21 || total1 < dealerTotal) {
+            cout << "First hand wins against the dealer.\n";} 
+        else if (hand1InGame && total1 == dealerTotal) {
+            cout << "First hand ties with the dealer.\n";}
+        else if (total1 > 21 || total1 < dealerTotal) {
             cout << "First hand loses to the dealer.\n";
         }
 
         if (hand2InGame && total2 > dealerTotal && total2 <= 21) {
-            cout << "Second hand wins against the dealer.\n";
-        } else if (hand2InGame && total2 == dealerTotal) {
-            cout << "Second hand ties with the dealer.\n";
-        } else if (total2 > 21 || total2 < dealerTotal) {
+            cout << "Second hand wins against the dealer.\n";}
+        else if (hand2InGame && total2 == dealerTotal) {
+            cout << "Second hand ties with the dealer.\n";}
+        else if (total2 > 21 || total2 < dealerTotal) {
             cout << "Second hand loses to the dealer.\n";
         }
     }

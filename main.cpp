@@ -28,7 +28,7 @@ int main() {
         playerHand = {deck.dealCard(), deck.dealCard()};
         dealerHand = {deck.dealCard(), deck.dealCard()};
         
-        cout << "\nDealer's visible card:" << endl;
+        cout << "Dealer's visible card:" << endl;
         dealerHand[0].displayCard();
 
         // Check for Blackjack
@@ -44,20 +44,22 @@ int main() {
         else {
             // Check if the player can split
         if (playerHand.size() == 2 && playerHand[0].getRank() == playerHand[1].getRank()) {
+            cout << "\nPlayer's hand:" << endl;
+            for (const auto& card : playerHand) card.displayCard();
             cout << "You have a pair! Would you like to split? (y/n): ";
-            cin.clear(); // Clears potential errors
-            cin.ignore(100, '\n'); // Clears buffer before input
             char choice;
             cin >> choice;
+            cin.clear(); // Clears potential errors
+            cin.ignore(100, '\n'); // Clears buffer before input
                 if (choice == 'y' || choice == 'Y') {
                 splitHands(deck, playerHand, dealerHand);
              
             // Ask if the player wants to play again once they finish the split logic
         char playAgainSplit;
         cout << "\nDo you want to play another round? (Y/N): ";
-        cin.clear(); // Clears potential errors
-        cin.ignore(100, '\n'); // Clears buffer before input
         cin >> playAgainSplit;
+                    cin.clear(); // Clears potential errors
+                    cin.ignore(100, '\n'); // Clears buffer before input
                     if (playAgainSplit == 'Y' || playAgainSplit == 'y') {
                     continue; // Starts a new round
                     } else {
@@ -82,9 +84,9 @@ int main() {
 
         //Replay option
         cout << "\nDo you want to play another round? (Y/N): ";
+        cin >> playAgain;
         cin.clear(); // Clears potential errors
         cin.ignore(100, '\n'); // Clears buffer before input
-        cin >> playAgain;
     }
 
     cout << "Thanks for playing!" << endl;

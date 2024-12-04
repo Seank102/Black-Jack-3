@@ -45,6 +45,8 @@ int main() {
             // Check if the player can split
         if (playerHand.size() == 2 && playerHand[0].getRank() == playerHand[1].getRank()) {
             cout << "You have a pair! Would you like to split? (y/n): ";
+            cin.clear(); // Clears potential errors
+            cin.ignore(100, '\n'); // Clears buffer before input
             char choice;
             cin >> choice;
                 if (choice == 'y' || choice == 'Y') {
@@ -53,6 +55,8 @@ int main() {
             // Ask if the player wants to play again once they finish the split logic
         char playAgainSplit;
         cout << "\nDo you want to play another round? (Y/N): ";
+        cin.clear(); // Clears potential errors
+        cin.ignore(100, '\n'); // Clears buffer before input
         cin >> playAgainSplit;
                     if (playAgainSplit == 'Y' || playAgainSplit == 'y') {
                     continue; // Starts a new round
@@ -78,6 +82,8 @@ int main() {
 
         //Replay option
         cout << "\nDo you want to play another round? (Y/N): ";
+        cin.clear(); // Clears potential errors
+        cin.ignore(100, '\n'); // Clears buffer before input
         cin >> playAgain;
     }
 

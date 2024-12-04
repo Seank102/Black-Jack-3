@@ -20,6 +20,8 @@ bool playerTurn(Deck& deck, vector<Card>& playerHand, bool& playerDoubledDown) {
         // Check for doubling down
         if (playerHand.size() == 2 && !playerDoubledDown) {
             cout << "\nDo you want to double down? (Y/N): ";
+            cin.clear(); // Clears potential errors
+            cin.ignore(100, '\n'); // Clears buffer before input
             char doubleChoice;
             cin >> doubleChoice;
 
@@ -37,6 +39,8 @@ bool playerTurn(Deck& deck, vector<Card>& playerHand, bool& playerDoubledDown) {
 
         // Hit or stand
         cout << "\nDo you want to (H)it or (S)tand? ";
+        cin.clear(); // Clears potential errors
+        cin.ignore(100, '\n'); // Clears buffer before input
         char choice;
         cin >> choice;
 

@@ -6,54 +6,6 @@
 #include <iostream>
 using namespace std;
 
-// Helper function for dealer's turn
-bool dealerTurn(Deck& deck, vector<Card>& dealerHand) {
-    cout << "\nDealer's hand:" << endl;
-    for (const auto& card : dealerHand) card.displayCard();
-
-    while (calculateHandValue(dealerHand) < 17) {
-        cout << "\nDealer hits." << endl;
-        // Dealer draws a new card
-        Card newCard = deck.dealCard();
-        dealerHand.push_back(newCard);
-
-        // Display the new card
-        cout << "Dealer drew: ";
-        newCard.displayCard();
-
-        // Display the updated total
-        int total = calculateHandValue(dealerHand);
-        cout << "Dealer's total: " << total << endl;
-    }
-
-    int total = calculateHandValue(dealerHand);
-    cout << "\nDealer stands with a total of " << total << ".\n";
-
-    if (total > 21) {
-        cout << "\nDealer busts! Player wins.\n";
-        return false; // Dealer loses
-    }
-
-    return true; // Dealer stands
-}
-
-// Helper function to evaluate the winner
-void evaluateWinner(const vector<Card>& playerHand, const vector<Card>& dealerHand) {
-    int playerTotal = calculateHandValue(playerHand);
-    int dealerTotal = calculateHandValue(dealerHand);
-
-    if (playerTotal > 21) {
-        cout << "You bust! Dealer wins.\n";
-    } else if (dealerTotal > 21) {
-        cout << "Dealer busts! Player wins.\n";
-    } else if (playerTotal > dealerTotal) {
-        cout << "Player wins!\n";
-    } else if (playerTotal < dealerTotal) {
-        cout << "Dealer wins.\n";
-    } else {
-        cout << "It's a tie!\n";
-    }
-}
 
 int main() {
     Deck deck; // Create and shuffle the deck
@@ -97,7 +49,7 @@ int main() {
                 cin >> splitChoice;
 
                 if (splitChoice == 'Y' || splitChoice == 'y') {
-                    splitHands(deck, playerHand);
+                    splitHands(deck, playerHand, dealerHand);
                     continue; // Skip to the next round
                 }
             }

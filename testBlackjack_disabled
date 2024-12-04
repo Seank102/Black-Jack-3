@@ -1,5 +1,7 @@
 #include "Deck.h"
 #include "Card.h"
+#include "GameLogic.h"
+#include "Player.h"
 #include <iostream>
 #include <vector>
 

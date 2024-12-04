@@ -2,6 +2,7 @@
 #define PLAYER_H
 #include "Card.h"
 #include "Deck.h"
+#include "GameLogic.h"
 #include <vector>
 
 bool playerTurn(Deck& deck, std::vector<Card>& playerHand, bool& playerDoubledDown);

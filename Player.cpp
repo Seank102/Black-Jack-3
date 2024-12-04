@@ -1,4 +1,7 @@
 #include "Player.h"
+#include "Card.h"
+#include "Deck.h"
+#include "GameLogic.h"
 #include <iostream>
 using namespace std;
 

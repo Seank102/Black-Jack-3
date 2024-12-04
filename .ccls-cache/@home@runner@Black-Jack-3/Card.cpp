@@ -6,8 +6,10 @@ using namespace std;
 Card::Card(Rank r, Suit s) : rank(r), suit(s) {}
 
 // Returns the rank of the card as a string
-string Card::getRank() const {
-    switch (rank) {
+string Card::getRank() const 
+{
+    switch (rank) 
+    {
         case TWO: return "2";
         case THREE: return "3";
         case FOUR: return "4";
@@ -28,8 +30,10 @@ string Card::getRank() const {
 }
 
 // Returns the suit of the card as a string
-string Card::getSuit() const {
-    switch (suit) {
+string Card::getSuit() const 
+{
+    switch (suit) 
+    {
         case HEARTS: return "Hearts";
         case DIAMONDS: return "Diamonds";
         case CLUBS: return "Clubs";
@@ -40,6 +44,7 @@ string Card::getSuit() const {
 }
 
 // Prints the card as "Rank of Suit"
-void Card::displayCard() const {
+void Card::displayCard() const 
+{
     cout << getRank() << " of " << getSuit() << endl;
 }

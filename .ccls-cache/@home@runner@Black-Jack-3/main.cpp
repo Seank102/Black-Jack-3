@@ -42,15 +42,15 @@ int main() {
         } else if (dealerTotal == 21) {
             cout << "\nDealer has Blackjack! Dealer wins.\n";
         } else {
-            // Handle splitting
-            if (playerHand[0].getRank() == playerHand[1].getRank()) {
-                cout << "\nYou have a pair of " << playerHand[0].getRank() << "s. Do you want to split? (Y/N): ";
-                char splitChoice;
-                cin >> splitChoice;
+            // Check if the player can split
+            if (playerHand.size() == 2 && playerHand[0].getRank() == playerHand[1].getRank()) {
+                cout << "You have a pair! Would you like to split? (y/n): ";
+                char choice;
+                cin >> choice;
 
-                if (splitChoice == 'Y' || splitChoice == 'y') {
+                if (choice == 'y' || choice == 'Y') {
                     splitHands(deck, playerHand, dealerHand);
-                    continue; // Skip to the next round
+                    continue; // Skip the rest of the loop as splitHands handles the game flow
                 }
             }
 
@@ -67,6 +67,7 @@ int main() {
                 cout << "You bust! Dealer wins.\n";
             }
         }
+
         //Replay option
         cout << "\nDo you want to play another round? (Y/N): ";
         cin >> playAgain;

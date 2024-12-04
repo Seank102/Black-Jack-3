@@ -118,7 +118,11 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
     cout << "\nDealer's turn:\n";
     bool dealerBust = dealerTurn(deck, dealerHand);
     int dealerTotal = calculateHandValue(dealerHand);
+    
+    cout << "Dealer Total: " << dealerTotal << "\n";
+    cout << "Dealer Bust: " << (dealerBust ? "true" : "false") << "\n";
 
+    
  if (!dealerBust) {
         if (hand1InGame && total1 > dealerTotal && total1 <= 21) {
             cout << "First hand wins against the dealer.\n";
@@ -135,11 +139,11 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
         } else if (hand2InGame) {
             cout << "Second hand loses to the dealer.\n";
         }
-    } else {
+        } else {
         cout << "Dealer busts! ";
         if (hand1InGame) cout << "First hand wins. ";
         if (hand2InGame) cout << "Second hand wins.\n";
-    }
+        }
 
     // Clear the player's hand to avoid returning to the main turn
     originalHand.clear();

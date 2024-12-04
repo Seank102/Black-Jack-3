@@ -57,16 +57,27 @@ bool dealerTurn(Deck& deck, vector<Card>& dealerHand) {
 
     while (calculateHandValue(dealerHand) < 17) {
         cout << "\nDealer hits." << endl;
-        dealerHand.push_back(deck.dealCard());
+        // Dealer draws a new card
+        Card newCard = deck.dealCard();
+        dealerHand.push_back(newCard);
+
+        // Display the new card
+        cout << "Dealer drew: ";
+        newCard.displayCard();
+
+        // Display the updated total
+        int total = calculateHandValue(dealerHand);
+        cout << "Dealer's total: " << total << endl;
     }
 
     int total = calculateHandValue(dealerHand);
+    cout << "\nDealer stands with a total of " << total << ".\n";
+
     if (total > 21) {
         cout << "\nDealer busts! Player wins.\n";
         return false; // Dealer loses
     }
 
-    cout << "\nDealer stands with a total of " << total << ".\n";
     return true; // Dealer stands
 }
 
@@ -75,12 +86,16 @@ void evaluateWinner(const vector<Card>& playerHand, const vector<Card>& dealerHa
     int playerTotal = calculateHandValue(playerHand);
     int dealerTotal = calculateHandValue(dealerHand);
 
-    if (playerTotal > dealerTotal) {
-        cout << "\nPlayer wins!\n";
+    if (playerTotal > 21) {
+        cout << "You bust! Dealer wins.\n";
+    } else if (dealerTotal > 21) {
+        cout << "Dealer busts! Player wins.\n";
+    } else if (playerTotal > dealerTotal) {
+        cout << "Player wins!\n";
     } else if (playerTotal < dealerTotal) {
-        cout << "\nDealer wins.\n";
+        cout << "Dealer wins.\n";
     } else {
-        cout << "\nIt's a tie.\n";
+        cout << "It's a tie!\n";
     }
 }
 
@@ -90,14 +105,21 @@ int main() {
 
     char playAgain = 'Y';
     while (playAgain == 'Y' || playAgain == 'y') {
-
-        vector<Card> playerHand = {deck.dealCard(), deck.dealCard()};
-        vector<Card> dealerHand = {deck.dealCard(), deck.dealCard()};
         
-        cout << "\nPlayer's hand:" << endl;
-        for (const auto& card : playerHand) card.displayCard();
-        cout << "Total: " << calculateHandValue(playerHand) << endl;
+        // Reset and shuffle the deck if needed
+        if (deck.getDeckSize() < 10) {
+            cout << "Reshuffling the deck...\n";
+            deck.resetDeck();
+            deck.shuffleDeck();
+        }
+        // Clear player and dealer hands for a fresh round
+        vector<Card> playerHand;
+        vector<Card> dealerHand;
 
+        // Deal new cards
+        playerHand = {deck.dealCard(), deck.dealCard()};
+        dealerHand = {deck.dealCard(), deck.dealCard()};
+        
         cout << "\nDealer's visible card:" << endl;
         dealerHand[0].displayCard();
 
@@ -107,68 +129,37 @@ int main() {
 
         if (playerTotal == 21 && dealerTotal == 21) {
             cout << "\nBoth the player and dealer have Blackjack! It's a tie.\n";
-            cout << "\nDo you want to play another round? (Y/N): ";
-            cin >> playAgain;
-            continue;
         } else if (playerTotal == 21) {
             cout << "\nPlayer has Blackjack! Player wins.\n";
-            cout << "\nDo you want to play another round? (Y/N): ";
-            cin >> playAgain;
-            continue;
         } else if (dealerTotal == 21) {
             cout << "\nDealer has Blackjack! Dealer wins.\n";
-            cout << "\nDo you want to play another round? (Y/N): ";
-            cin >> playAgain;
-            continue;
-        }
+        } else {
+            // Handle splitting
+            if (playerHand[0].getRank() == playerHand[1].getRank()) {
+                cout << "\nYou have a pair of " << playerHand[0].getRank() << "s. Do you want to split? (Y/N): ";
+                char splitChoice;
+                cin >> splitChoice;
 
-        // Check for splitting
-        if (playerHand[0].getRank() == playerHand[1].getRank()) {
-            cout << "\nYou have a pair of " << playerHand[0].getRank() << "s. Do you want to split? (Y/N): ";
-            char splitChoice;
-            cin >> splitChoice;
-
-            if (splitChoice == 'Y' || splitChoice == 'y') {
-                splitHands(deck, playerHand);
-                cout << "\nDo you want to play another round? (Y/N): ";
-                cin >> playAgain;
-                continue;
-            }
-        }
-
-        // Check for doubling down
-        cout << "\nDo you want to double down? (Y/N): ";
-        char doubleChoice;
-        cin >> doubleChoice;
-
-        if (doubleChoice == 'Y' || doubleChoice == 'y') {
-            playerHand.push_back(deck.dealCard());
-            cout << "\nYou drew:" << endl;
-            playerHand.back().displayCard();
-            playerTotal = calculateHandValue(playerHand);
-            cout << "Total: " << playerTotal << endl;
-            
-            if (playerTotal > 21) {
-                cout << "You bust! Dealer wins.\n";
+                if (splitChoice == 'Y' || splitChoice == 'y') {
+                    splitHands(deck, playerHand);
+                    continue; // Skip to the next round
                 }
-            cout << "\nDo you want to play another round? (Y/N): ";
-            cin >> playAgain;
-            continue;
-        }
-
-        // Track doubling down
-        bool playerDoubledDown = false;
-        bool playerInGame = playerTurn(deck, playerHand, playerDoubledDown);
-        
-        // Player's turn
-        if (playerInGame) { // Dealer's turn only runs if the player is still in the game
-            if (!dealerTurn(deck, dealerHand)) {
             }
 
-            // Evaluate the winner
-            evaluateWinner(playerHand, dealerHand);
+            //Player's main turn
+            bool playerDoubledDown = false;
+            bool playerInGame = playerTurn(deck, playerHand, playerDoubledDown);
+
+            if (playerInGame) {
+                if (dealerTurn(deck, dealerHand)) {
+                    evaluateWinner(playerHand, dealerHand);
+                }
+            } else {
+                cout << "\nTotal: " << calculateHandValue(playerHand) << endl;
+                cout << "You bust! Dealer wins.\n";
+            }
         }
-        // Replay option
+        //Replay option
         cout << "\nDo you want to play another round? (Y/N): ";
         cin >> playAgain;
     }

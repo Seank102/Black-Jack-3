@@ -55,8 +55,7 @@ void testSplitting() {
     splitHands(deck, acesHand); // Test splitting with Aces
     cout << "Split completed. Verify gameplay behavior manually.\n\n";
 }
-
-// Main test function
+//Main
 int main() {
     // Test Ace Handling
     testAces();

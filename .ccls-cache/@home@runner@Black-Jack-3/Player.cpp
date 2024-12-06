@@ -5,6 +5,20 @@
 #include <iostream>
 using namespace std;
 
+
+void recalculateAndDisplayProbabilities(const std::vector<Card>& playerHand, const std::vector<Card>& dealerHand, const Deck& deck) 
+{
+    double probabilityWinIfHit = 0.0;
+    double probabilityWinIfStand = 0.0;
+    double probabilityBustIfHit = 0.0;
+
+    calculateWinningProbability(playerHand, dealerHand, deck, probabilityWinIfHit, probabilityWinIfStand, probabilityBustIfHit);
+
+    std::cout << "Probability of winning if you hit: " << probabilityWinIfHit * 100 << "%\n";
+    std::cout << "Probability of winning if you stand: " << probabilityWinIfStand * 100 << "%\n";
+    std::cout << "Probability of busting if you hit: " << probabilityBustIfHit * 100 << "%\n";
+}
+
 bool playerTurn(Deck& deck, std::vector<Card>& playerHand, std::vector<Card>& dealerHand, bool& playerDoubledDown) 
 {
     while (true) 
@@ -15,6 +29,8 @@ bool playerTurn(Deck& deck, std::vector<Card>& playerHand, std::vector<Card>& de
         int total = calculateHandValue(playerHand);
         cout << "Total: " << total << endl;
 
+        recalculateAndDisplayProbabilities(playerHand, dealerHand, deck);
+        
         if (total > 21) 
         {
             return false; // Player busts
@@ -54,17 +70,6 @@ bool playerTurn(Deck& deck, std::vector<Card>& playerHand, std::vector<Card>& de
         }
 
         char choice;
-
-        double probabilityWinIfHit = 0.0;
-        double probabilityWinIfStand = 0.0;
-        double probabilityBustIfHit = 0.0;
-
-        calculateWinningProbability(playerHand, dealerHand, deck, probabilityWinIfHit, probabilityWinIfStand, probabilityBustIfHit);
-
-        // Display the probabilities
-        std::cout << "Probability of winning if you hit: " << probabilityWinIfHit * 100 << "%\n";
-        std::cout << "Probability of winning if you stand: " << probabilityWinIfStand * 100 << "%\n";
-        std::cout << "Probability of busting if you hit: " << probabilityBustIfHit * 100 << "%\n";
         
         while (true) 
         {   // Loop until valid input
@@ -73,6 +78,8 @@ bool playerTurn(Deck& deck, std::vector<Card>& playerHand, std::vector<Card>& de
             cin.clear(); // Clears potential errors
             cin.ignore(100, '\n'); // Clears buffer before input
 
+            recalculateAndDisplayProbabilities(playerHand, dealerHand, deck);
+            
             if (choice == 'H' || choice == 'h') 
             {
                 playerHand.push_back(deck.dealCard());
@@ -82,18 +89,6 @@ bool playerTurn(Deck& deck, std::vector<Card>& playerHand, std::vector<Card>& de
                 {
                     return false; // End the turn
                 }
-                // **Recalculate probabilities after the hit**
-                double probabilityWinIfHit = 0.0;
-                double probabilityWinIfStand = 0.0;
-                double probabilityBustIfHit = 0.0;
-
-                calculateWinningProbability(playerHand, dealerHand, deck, probabilityWinIfHit, probabilityWinIfStand, probabilityBustIfHit);
-
-                // Display the probabilities
-                std::cout << "Probability of winning if you hit: " << probabilityWinIfHit * 100 << "%\n";
-                std::cout << "Probability of winning if you stand: " << probabilityWinIfStand * 100 << "%\n";
-                std::cout << "Probability of busting if you hit: " << probabilityBustIfHit * 100 << "%\n";
-                
                 break; // Exit loop to handle the new card
             } 
             else if (choice == 'S' || choice == 's') 

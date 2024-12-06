@@ -26,6 +26,9 @@ class Deck
         void resetDeck();
 
         int getDeckSize() const;
+
+        //Function to pull remaining cards
+        std::vector<Card> getRemainingCards() const;
 };
 
 #endif

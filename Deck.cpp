@@ -66,3 +66,8 @@ int Deck::getDeckSize() const
 {
     return cards.size();
 }
+
+std::vector<Card> Deck::getRemainingCards() const 
+{
+    return cards; // Return a copy of the cards vector
+}

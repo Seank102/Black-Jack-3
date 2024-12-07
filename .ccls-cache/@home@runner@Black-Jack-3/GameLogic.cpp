@@ -1,7 +1,5 @@
 #include "GameLogic.h"
 #include "Player.h"
-#include <vector>
-#include <string>
 #include <iostream>
 
 using namespace std;
@@ -119,7 +117,7 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
     // Play the first split hand
     cout << "\nPlaying first split hand:\n";
     bool playerDoubledDown1 = false;
-    bool hand1InGame = playerTurn(deck, hand1, dealerHand, playerDoubledDown1);
+    bool hand1InGame = playerTurn(deck, hand1, playerDoubledDown1);
     int total1 = calculateHandValue(hand1);
     
     if (hand1InGame) 
@@ -134,7 +132,7 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
     // Play the second split hand
     cout << "\nPlaying second split hand:\n";
     bool playerDoubledDown2 = false;
-    bool hand2InGame = playerTurn(deck, hand2, dealerHand, playerDoubledDown2);
+    bool hand2InGame = playerTurn(deck, hand2, playerDoubledDown2);
     int total2 = calculateHandValue(hand2);
     
     if (hand2InGame) 
@@ -187,122 +185,4 @@ void splitHands(Deck& deck, vector<Card>& originalHand, vector<Card>& dealerHand
     }
     //Clears all hands
     originalHand.clear();
-}
-
-int simulateDealerRecursive(const std::vector<Card>* dealerHand, const std::vector<Card>* remainingCards, int depth = 0, int maxDepth = 10) 
-{
-    int dealerTotal = calculateHandValue(*dealerHand);
-
-    // Base cases: Dealer stands, busts, or recursion limit reached
-    if (dealerTotal >= 17 || depth >= maxDepth) {
-        return dealerTotal; // Dealer stands or recursion limit
-    }
-    if (dealerTotal > 21) {
-        return 0; // Dealer busts
-    }
-
-    int bestOutcome = 0; // Track the best valid dealer outcome
-
-    for (size_t i = 0; i < remainingCards->size(); ++i) {
-        // Create local copies for this branch
-        std::vector<Card> nextHand = *dealerHand;
-        std::vector<Card> nextDeck = *remainingCards;
-
-        nextHand.push_back((*remainingCards)[i]); // Add card to dealer's hand
-        nextDeck.erase(nextDeck.begin() + i);    // Remove card from deck
-
-        int outcome = simulateDealerRecursive(&nextHand, &nextDeck, depth + 1, maxDepth);
-
-        if (outcome <= 21) {
-            bestOutcome = std::max(bestOutcome, outcome);
-        }
-    }
-
-    return bestOutcome;
-}
-
-int simulateDealer(const std::vector<Card>& dealerHand, const std::vector<Card>& remainingCards) 
-{
-    return simulateDealerRecursive(&dealerHand, &remainingCards, 0, 10); // Start recursion with depth 0
-}
-
-void simulatePlayerRecursive(
-    const std::vector<Card>* playerHand,
-    const std::vector<Card>* dealerHand,
-    const std::vector<Card>* remainingCards,
-    int& winsIfHit,
-    int& bustsIfHit,
-    int& totalSimulationsForHit,
-    int depth = 0,
-    int maxDepth = 10)
-{
-    int playerTotal = calculateHandValue(*playerHand);
-
-    // Base case: Player busts or max recursion depth reached
-    if (playerTotal > 21 || depth >= maxDepth) {
-        if (playerTotal > 21) {
-            bustsIfHit++;
-        }
-        totalSimulationsForHit++;
-        return;
-    }
-
-    for (size_t i = 0; i < remainingCards->size(); ++i) {
-        // Create local copies for this branch
-        std::vector<Card> nextPlayerHand = *playerHand;
-        std::vector<Card> nextDeck = *remainingCards;
-
-        nextPlayerHand.push_back((*remainingCards)[i]);  // Add card to player's hand
-        nextDeck.erase(nextDeck.begin() + i);           // Remove card from deck
-
-        // Simulate dealer outcomes for this branch
-        if (calculateHandValue(nextPlayerHand) <= 21) {
-            int simulatedDealerTotal = simulateDealer(*dealerHand, nextDeck);
-
-            if (simulatedDealerTotal == 0 || calculateHandValue(nextPlayerHand) > simulatedDealerTotal) {
-                winsIfHit++;
-            }
-        }
-
-        // Recurse for the next card
-        simulatePlayerRecursive(&nextPlayerHand, dealerHand, &nextDeck, winsIfHit, bustsIfHit, totalSimulationsForHit, depth + 1, maxDepth);
-    }
-
-    totalSimulationsForHit++; // Count this path as one simulation
-}
-
-// Wrapper function to calculate winning probabilities with recursive player simulation
-void calculateWinningProbability(
-    const std::vector<Card>& playerHand,
-    const std::vector<Card>& dealerHand,
-    const Deck& deck,
-    double& probabilityWinIfHit,
-    double& probabilityWinIfStand,
-    double& probabilityBustIfHit)
-{
-    int totalSimulationsForHit = 0;
-    int totalSimulationsForStand = 1; // Only one simulation for standing
-    int winsIfHit = 0;
-    int winsIfStand = 0;
-    int bustsIfHit = 0;
-
-    auto remainingCards = deck.getRemainingCards();
-
-    int playerTotal = calculateHandValue(playerHand);
-
-    // Simulate standing
-    {
-        int simulatedDealerTotal = simulateDealer(dealerHand, remainingCards);
-        if (playerTotal > simulatedDealerTotal || simulatedDealerTotal == 0) {
-            winsIfStand++;
-        }
-    }
-
-    // Simulate hitting
-    simulatePlayerRecursive(&playerHand, &dealerHand, &remainingCards, winsIfHit, bustsIfHit, totalSimulationsForHit);
-
-    // Calculate probabilities
-    probabilityWinIfHit = (totalSimulationsForHit > 0) ? static_cast<double>(winsIfHit) / totalSimulationsForHit : 0.0;
-    probabilityWinIfStand = static_cast<double>(winsIfStand) / totalSimulationsForStand;
-    probabilityBustIfHit = (totalSimulationsForHit > 0) ? static_cast<double>(bustsIfHit) / totalSimulationsForHit : 0.0;
 }

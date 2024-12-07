@@ -85,7 +85,7 @@ int main()
 
             //Player's main turn
             bool playerDoubledDown = false;
-            bool playerInGame = playerTurn(deck, playerHand, dealerHand, playerDoubledDown);
+            bool playerInGame = playerTurn(deck, playerHand, playerDoubledDown);
 
             if (playerInGame) 
             {
